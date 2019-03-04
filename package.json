@@ -4,8 +4,14 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^3.9.2",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^6.2.0",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "massive": "^5.7.7",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
+    "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.5"
   },
   "scripts": {
@@ -22,5 +28,7 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "main": "server/index.js",
+  "proxy": "http://locatlhost:4000"
 }
