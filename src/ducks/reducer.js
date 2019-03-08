@@ -16,6 +16,7 @@ export function updateUser(user) {
 }
 
 export function clearUser() {
+  console.log('cleared user');
   return {
     type: CLEAR_USER,
   };
