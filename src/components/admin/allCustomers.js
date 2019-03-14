@@ -41,10 +41,6 @@ class AllCustomers extends Component {
     };
   }
 
-  testy = () => {
-    console.log(this.state.allCustomers[0]);
-  };
-
   componentDidMount = async () => {
     await this.getUser();
     await this.getAllCustomers();

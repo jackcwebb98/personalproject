@@ -41,6 +41,7 @@ app.post(`/auth/logout`, ctrl.logout);
 app.post(`/customer/new`, ctrl.createCustomer);
 app.post(`/api/customers`, ctrl.getAllCustomers);
 app.post(`/delete/customer`, ctrl.deleteCustomer);
+app.post(`/api/platecheck`, ctrl.plateCheck);
 
 app.get(`/api/current`, ctrl.getUser);
 app.get(`/api/companies`, ctrl.getAllCompanies);

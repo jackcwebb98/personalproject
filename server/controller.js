@@ -99,4 +99,11 @@ module.exports = {
 
     db.deleteCustomer(id).then(res.sendStatus(200));
   },
+  plateCheck: async (req, res) => {
+    const db = req.app.get('db');
+    const { companyId, plateNumber } = req.body;
+
+    let customer = await db.checkPlate(plateNumber, companyId);
+    res.send(customer);
+  },
 };
