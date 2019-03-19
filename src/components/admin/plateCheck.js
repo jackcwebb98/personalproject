@@ -4,18 +4,17 @@ import Input from '@material-ui/core/Input';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
 import { Paper, Button } from '@material-ui/core';
+import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { connect } from 'react-redux';
 import { clearUser, updateUser } from '../../ducks/reducer';
-
 import axios from 'axios';
 
-const drawerWidth = 60;
+const { REACT_APP_KEY_FILE } = process.env;
 
 const styles = theme => ({
   root: {
@@ -23,20 +22,25 @@ const styles = theme => ({
     display: 'flex',
   },
   view: {
-    width: `calc(100vw - ${drawerWidth}px)`,
-    marginLeft: 80,
+    width: '100vw',
     height: '100vh',
     display: 'flex',
-    justifyContent: 'space-evenly',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   paper: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
     flexDirection: 'column',
-    height: '50%',
-    width: '50%',
+    height: '60%',
+    width: '60%',
+  },
+  trueAlert: {
+    backgroundColor: '#92f78f',
+  },
+  falseAlert: {
+    backgroundColor: theme.palette.primary.main,
   },
 });
 
@@ -44,19 +48,88 @@ class PlateCheck extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      plateNumber: '',
-      foundCustomer: [],
+      foundCustomer: {},
       falseAlert: false,
       trueAlert: false,
+      image: '',
+      imageText: '',
     };
   }
 
   test = () => {
-    console.log(this.state.foundCustomer[0]);
+    console.log(REACT_APP_KEY_FILE);
   };
 
   componentDidMount = async () => {
     await this.getUser();
+  };
+
+  findCustomer = async () => {
+    let user = {
+      imageText: this.state.imageText,
+      companyId: this.props.companyId,
+    };
+
+    let foundUser = await axios.post(`/api/imagecheck`, user);
+    if (foundUser.data[0]) {
+      this.setState({
+        foundCustomer: foundUser.data[0],
+        trueAlert: true,
+      });
+    } else {
+      this.setState({
+        falseAlert: true,
+      });
+    }
+  };
+
+  encodeImageFileAsURL = e => {
+    if (!e.target.files[0]) {
+      return;
+    }
+    var reader = new FileReader();
+    reader.onloadend = () => {
+      this.setState({
+        image: reader.result,
+      });
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  };
+
+  handleGoogleSubmit = async () => {
+    let image = this.state.image.replace(
+      /^data:image\/(png|jpg|jpeg);base64,/,
+      ''
+    );
+
+    let jsonString = {
+      requests: [
+        {
+          image: {
+            content: image,
+          },
+          features: [
+            {
+              type: 'TEXT_DETECTION',
+            },
+          ],
+        },
+      ],
+    };
+
+    try {
+      let result = await axios.post(
+        `https://vision.googleapis.com/v1/images:annotate?key=${REACT_APP_KEY_FILE}`,
+        jsonString
+      );
+      this.setState({
+        imageText: result.data.responses[0].fullTextAnnotation.text,
+      });
+      console.log(this.state.imageText);
+      this.findCustomer();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   getUser = async () => {
@@ -82,56 +155,63 @@ class PlateCheck extends Component {
     });
   };
 
-  submit = async () => {
-    let user = {
-      companyId: this.props.companyId,
-      plateNumber: this.state.plateNumber,
-    };
-    console.log(user);
-
-    await axios.post(`/api/platecheck`, user).then(res => {
-      this.setState({
-        foundCustomer: res.data,
-      });
-    });
-  };
-
   handleDialog = (prop, val) => {
     this.setState({
       [prop]: val,
     });
   };
 
+  handleClose = () => {
+    this.setState({
+      trueAlert: false,
+      falseAlert: false,
+      foundCustomer: {},
+    });
+  };
+
   render() {
     const { classes } = this.props;
-    const customer = this.state.foundCustomer[0];
     return (
       <div className={classes.root}>
         <NavBar history={this.props.history} />
         <div className={classes.view}>
-          <Dialog
-            open={this.state.trueAlert}
-            onClose={() => this.handleDialog('trueAlert', false)}
-          >
-            <DialogTitle>customer Name</DialogTitle>
+          <Dialog open={this.state.trueAlert} onClose={this.handleClose}>
+            <DialogTitle className={classes.trueAlert}>
+              {'Customer Found'}
+            </DialogTitle>
             <DialogContent>
               <DialogContentText>
-                {/* Customer: {customer.real_name} */}
+                Customer Name: {this.state.foundCustomer.real_name}
+              </DialogContentText>
+              <DialogContentText>
+                Car Make: {this.state.foundCustomer.car_make}
+              </DialogContentText>
+              <DialogContentText>
+                Plate Number: {this.state.foundCustomer.plate_number}
               </DialogContentText>
             </DialogContent>
           </Dialog>
+          <Dialog open={this.state.falseAlert} onClose={this.handleClose}>
+            <DialogTitle className={classes.falseAlert}>
+              {'No Customer Found'}
+            </DialogTitle>
+          </Dialog>
           <Paper className={classes.paper}>
-            <Button onClick={this.test} variant="outlined">
-              test
-            </Button>
-            <Button onClick={this.submit} variant="outlined">
-              submit
-            </Button>
             <TextField
               label="License Plate Number"
-              onChange={e => this.handleInput('plateNumber', e.target.value)}
+              onChange={e => this.handleInput('imageText', e.target.value)}
             />
-            <Input type="file" />
+            <Button onClick={this.findCustomer} variant="outlined">
+              submit
+            </Button>
+            <Input
+              type="file"
+              accept="image/*"
+              onChange={e => this.encodeImageFileAsURL(e)}
+            />
+            <Button onClick={this.handleGoogleSubmit} variant="outlined">
+              Check Image
+            </Button>
           </Paper>
         </div>
       </div>

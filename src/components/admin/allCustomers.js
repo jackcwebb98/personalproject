@@ -7,8 +7,12 @@ import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { clearUser, updateUser } from '../../ducks/reducer';
 import NavBar from '../navbar';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
-const drawerWidth = 60;
 
 const styles = theme => ({
   root: {
@@ -20,16 +24,17 @@ const styles = theme => ({
     // flexShrink: 0,
   },
   view: {
-    width: `calc(100vw - ${drawerWidth}px)`,
-    marginLeft: 80,
+    width: '100vw',
     height: '100vh',
-  },
-  customerPaper: {
-    height: '75px',
-    margin: '10px',
     display: 'flex',
+    justifyContent: 'center',
     alignItems: 'center',
-    justifyContent: 'space-around',
+  },
+  table: {
+    midWidth: 700,
+  },
+  paper: {
+    width: '75%',
   },
 });
 
@@ -100,24 +105,33 @@ class AllCustomers extends Component {
     const { classes } = this.props;
     const mappedState = this.state.allCustomers.map((customer, id) => {
       return (
-        <div key={id} className={classes.mappedPaper}>
-          <Paper className={classes.customerPaper}>
-            <div>{customer.real_name}</div>
-            <div>{customer.car_make}</div>
-            <div>{customer.plate_number}</div>
-            <Button onClick={() => this.deleteCustomer(customer)}>
-              Delete
-            </Button>
-          </Paper>
-        </div>
+        <TableRow key={id}>
+          <TableCell component="th" scope="row">
+            {customer.real_name}
+          </TableCell>
+          <TableCell align="left">{customer.car_make}</TableCell>
+          <TableCell align="left">{customer.plate_number}</TableCell>
+          <Button onClick={() => this.deleteCustomer(customer)}>Delete</Button>
+        </TableRow>
       );
     });
     return (
       <div className={classes.root}>
         <NavBar history={this.props.history} />
         <div className={classes.view}>
-          <Button onClick={this.testy}>test</Button>
-          {mappedState}
+          <Paper className={classes.paper}>
+            <Table className={classes.table}>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Customer Name</TableCell>
+                  <TableCell align="left">License Plate</TableCell>
+                  <TableCell align="left">Car Model</TableCell>
+                  <TableCell align="left">Delete</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>{mappedState}</TableBody>
+            </Table>
+          </Paper>
         </div>
       </div>
     );

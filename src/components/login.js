@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { updateUser } from '../ducks/reducer';
+import { Typography } from '@material-ui/core';
 
 const styles = theme => ({
   root: {
@@ -122,7 +123,7 @@ class Login extends Component {
     return (
       <div className={classes.root}>
         <Paper className={classes.paper}>
-          Login
+          <Typography className={classes.typography}>Login</Typography>
           <TextField
             error={error.username}
             label="Username"
@@ -192,4 +193,7 @@ const mapDispatchToProps = {
   updateUser,
 };
 
-export default connect(mapStateToProps,mapDispatchToProps)(withStyles(styles)(Login));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(Login));

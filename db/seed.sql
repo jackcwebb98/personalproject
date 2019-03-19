@@ -14,3 +14,5 @@ create table users (
     company_id int,
     FOREIGN KEY (company_id) REFERENCES company (company_id)
 )
+
+select * from users where 'asdfk;lajsdfgdsaasdfasdfasdfl;kajsdfj;k' ~ plate_number

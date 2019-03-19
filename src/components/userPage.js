@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import Select from 'react-select';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import { Paper, withStyles, TextField } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import { Link } from 'react-router-dom';
 
 const styles = theme => ({
   root: {
@@ -20,11 +21,15 @@ const styles = theme => ({
     height: '60%',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-around',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
   },
-  wrapper: {
-    alignItems: '',
+  textFields: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  select: {
+    width: '22%',
   },
 });
 
@@ -90,29 +95,36 @@ class UserPage extends Component {
     });
     return (
       <div className={classes.root}>
-        <CssBaseline />
         <Paper className={classes.paper}>
-          <div>New Customer</div>
-          <TextField
-            label="Customer Name"
-            onChange={e => this.handleInput('customerName', e.target.value)}
-          />
-          <br />
-          <TextField
-            label="License Plate Number"
-            onChange={e => this.handleInput('plateNumber', e.target.value)}
-          />{' '}
-          <br />
-          <TextField
-            label="Vehicle Model"
-            onChange={e => this.handleInput('vehicle', e.target.value)}
-          />{' '}
-          <br />
-          <div className={classes.wrapper}>
+          <div>
+            <Typography variant="title">New Customer</Typography>
+          </div>
+          <div className={classes.textFields}>
+            <TextField
+              label="Customer Name"
+              onChange={e => this.handleInput('customerName', e.target.value)}
+            />
+            <br />
+            <TextField
+              label="License Plate Number"
+              onChange={e => this.handleInput('plateNumber', e.target.value)}
+            />{' '}
+            <br />
+            <TextField
+              label="Vehicle Model"
+              onChange={e => this.handleInput('vehicle', e.target.value)}
+            />{' '}
+            <br />
+          </div>
+
+          <div className={classes.select}>
             <Select options={mappedState} onChange={this.handleIdInput} />{' '}
             <br />
           </div>
           <Button onClick={this.newCustomer}>submit</Button>
+          <Link to="/" style={{ textDecoration: 'none' }}>
+            <Button>Home</Button>
+          </Link>
         </Paper>
       </div>
     );

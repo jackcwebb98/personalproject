@@ -106,4 +106,11 @@ module.exports = {
     let customer = await db.checkPlate(plateNumber, companyId);
     res.send(customer);
   },
+  imageCheck: async (req, res) => {
+    const db = req.app.get('db');
+    const { companyId, imageText } = req.body;
+
+    let foundCustomer = await db.imageCheck(imageText, companyId);
+    res.status(200).send(foundCustomer);
+  },
 };

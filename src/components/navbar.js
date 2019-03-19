@@ -1,39 +1,36 @@
 import React from 'react';
 import axios from 'axios';
 import Button from '@material-ui/core/Button';
-import Drawer from '@material-ui/core/Drawer';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { clearUser } from '../ducks/reducer';
 import { Link } from 'react-router-dom';
-
-const drawerWidth = 60;
+import AppBar from '@material-ui/core/AppBar';
 
 const styles = theme => ({
   root: {
     display: 'flex',
   },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
+  appbar: {
+    height: '10%',
     display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
+    backgroundColor: 'white',
   },
   overall: {
     display: 'flex',
-    flexDirection: 'column',
     justifyContent: 'space-between',
   },
   firstDiv: {
+    marginLeft: '17px',
     display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    flexDirection: 'space-between',
   },
   secondDiv: {
+    marginRight: '30px',
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'space-between',
     alignItems: 'center',
   },
 });
@@ -48,7 +45,7 @@ const NavBar = props => {
   };
 
   return (
-    <Drawer className={classes.drawer} variant="permanent" anchor="left">
+    <AppBar className={classes.appbar}>
       <div className={classes.overall}>
         <div className={classes.firstDiv}>
           <Link to="/allcustomers" style={{ textDecoration: 'none' }}>
@@ -62,7 +59,7 @@ const NavBar = props => {
           <Button onClick={() => logout()}>logout</Button>
         </div>
       </div>
-    </Drawer>
+    </AppBar>
   );
 };
 
