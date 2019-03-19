@@ -12,21 +12,18 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-
+import Grid from '@material-ui/core/Grid';
 
 const styles = theme => ({
   root: {
     display: 'flex',
     backgroundColor: theme.palette.primary.main,
   },
-  drawer: {
-    width: 600,
-    // flexShrink: 0,
-  },
   view: {
     width: '100vw',
     height: '100vh',
     display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -35,6 +32,17 @@ const styles = theme => ({
   },
   paper: {
     width: '75%',
+  },
+  tableCell: {
+    [theme.breakpoints.down('sm')]: {
+      paddingRight: 4,
+      paddingLeft: 5,
+    },
+  },
+  notShownInMobile: {
+    [theme.breakpoints.down('sm')]: {
+      display: 'none',
+    },
   },
 });
 
@@ -109,9 +117,17 @@ class AllCustomers extends Component {
           <TableCell component="th" scope="row">
             {customer.real_name}
           </TableCell>
-          <TableCell align="left">{customer.car_make}</TableCell>
-          <TableCell align="left">{customer.plate_number}</TableCell>
-          <Button onClick={() => this.deleteCustomer(customer)}>Delete</Button>
+          <TableCell align="center" className={classes.notShownInMobile}>
+            {customer.car_make}
+          </TableCell>
+          <TableCell align="center" className={classes.tableCell}>
+            {customer.plate_number}
+          </TableCell>
+          <TableCell align="center" className={classes.tableCell}>
+            <Button onClick={() => this.deleteCustomer(customer)}>
+              Delete
+            </Button>
+          </TableCell>
         </TableRow>
       );
     });
@@ -120,17 +136,30 @@ class AllCustomers extends Component {
         <NavBar history={this.props.history} />
         <div className={classes.view}>
           <Paper className={classes.paper}>
-            <Table className={classes.table}>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Customer Name</TableCell>
-                  <TableCell align="left">License Plate</TableCell>
-                  <TableCell align="left">Car Model</TableCell>
-                  <TableCell align="left">Delete</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>{mappedState}</TableBody>
-            </Table>
+            <Grid item xs={12}>
+              <Table className={classes.table}>
+                <TableHead>
+                  <TableRow>
+                    <TableCell className={classes.tableCell}>
+                      Customer Name
+                    </TableCell>
+                    <TableCell align="center" className={classes.tableCell}>
+                      Car Model
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      className={classes.notShownInMobile}
+                    >
+                      License Plate
+                    </TableCell>
+                    <TableCell align="center" className={classes.tableCell}>
+                      Delete
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>{mappedState}</TableBody>
+              </Table>
+            </Grid>
           </Paper>
         </div>
       </div>

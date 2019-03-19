@@ -30,6 +30,9 @@ const styles = theme => ({
   },
   select: {
     width: '22%',
+    [theme.breakpoints.down('sm')]: {
+      width: '35vw',
+    },
   },
 });
 
@@ -106,7 +109,7 @@ class UserPage extends Component {
             />
             <br />
             <TextField
-              label="License Plate Number"
+              label="License Plate"
               onChange={e => this.handleInput('plateNumber', e.target.value)}
             />{' '}
             <br />
@@ -121,9 +124,11 @@ class UserPage extends Component {
             <Select options={mappedState} onChange={this.handleIdInput} />{' '}
             <br />
           </div>
-          <Button onClick={this.newCustomer}>submit</Button>
+          <Button onClick={this.newCustomer} variant="outlined">
+            submit
+          </Button>
           <Link to="/" style={{ textDecoration: 'none' }}>
-            <Button>Home</Button>
+            <Button variant="outlined">Home</Button>
           </Link>
         </Paper>
       </div>

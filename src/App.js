@@ -19,7 +19,7 @@ const styles = theme => ({
       width: '0.4em',
     },
     '*::-webkit-scrollbar-thumb': {
-      backgroundColor: '#F29898',
+      backgroundColor: '#aeb7c4',
       borderRadius: 5,
     },
   },

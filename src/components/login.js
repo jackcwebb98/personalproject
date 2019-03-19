@@ -123,7 +123,7 @@ class Login extends Component {
     return (
       <div className={classes.root}>
         <Paper className={classes.paper}>
-          <Typography className={classes.typography}>Login</Typography>
+          <Typography variant="headline">Plate Checker</Typography>
           <TextField
             error={error.username}
             label="Username"

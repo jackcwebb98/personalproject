@@ -4,7 +4,7 @@ import Input from '@material-ui/core/Input';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import { Paper, Button } from '@material-ui/core';
+import { Paper, Button, Typography } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -41,6 +41,20 @@ const styles = theme => ({
   },
   falseAlert: {
     backgroundColor: theme.palette.primary.main,
+  },
+  inputs: {
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    height: '50%',
+    [theme.breakpoints.down('sm')]: {
+      width: '70%',
+    },
+  },
+  innerInputs: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    height: '50%',
   },
 });
 
@@ -197,21 +211,30 @@ class PlateCheck extends Component {
             </DialogTitle>
           </Dialog>
           <Paper className={classes.paper}>
-            <TextField
-              label="License Plate Number"
-              onChange={e => this.handleInput('imageText', e.target.value)}
-            />
-            <Button onClick={this.findCustomer} variant="outlined">
-              submit
-            </Button>
-            <Input
-              type="file"
-              accept="image/*"
-              onChange={e => this.encodeImageFileAsURL(e)}
-            />
-            <Button onClick={this.handleGoogleSubmit} variant="outlined">
-              Check Image
-            </Button>
+            <div>
+              <Typography variant="title">Plate Check</Typography>
+            </div>
+            <div className={classes.inputs}>
+              <div className={classes.innerInputs}>
+                <TextField
+                  label="License Plate Number"
+                  onChange={e => this.handleInput('imageText', e.target.value)}
+                />
+                <Button onClick={this.findCustomer} variant="outlined">
+                  submit
+                </Button>
+              </div>
+              <div className={classes.innerInputs}>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={e => this.encodeImageFileAsURL(e)}
+                />
+                <Button onClick={this.handleGoogleSubmit} variant="outlined">
+                  Check Image
+                </Button>
+              </div>
+            </div>
           </Paper>
         </div>
       </div>
