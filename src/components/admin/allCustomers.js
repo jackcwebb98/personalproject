@@ -13,6 +13,13 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Grid from '@material-ui/core/Grid';
+import Switch from '@material-ui/core/Switch';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import TextField from '@material-ui/core/TextField';
+import { Typography, DialogActions } from '@material-ui/core';
 
 const styles = theme => ({
   root: {
@@ -44,6 +51,10 @@ const styles = theme => ({
       display: 'none',
     },
   },
+  wrapper: {
+    display: 'flex',
+    alignItems: 'center',
+  },
 });
 
 class AllCustomers extends Component {
@@ -51,6 +62,12 @@ class AllCustomers extends Component {
     super();
     this.state = {
       allCustomers: [],
+      editing: false,
+      editOpen: false,
+      editCustomer: {},
+      editCustomerName: '',
+      editCustomerCar: '',
+      editCustomerPlate: '',
     };
   }
 
@@ -109,6 +126,51 @@ class AllCustomers extends Component {
     this.props.history.push('/');
   };
 
+  handleEditChange = e => {
+    this.setState({
+      editing: e.target.checked,
+    });
+  };
+
+  handleEditOpen = customer => {
+    this.setState({
+      editOpen: true,
+      editCustomer: customer,
+      editCustomerName: customer.real_name,
+      editCustomerPlate: customer.plate_number,
+      editCustomerCar: customer.car_make,
+    });
+  };
+
+  handleClose = () => {
+    this.setState({ editOpen: false });
+  };
+
+  handleInputUpdate = (prop, val) => {
+    this.setState({
+      [prop]: val,
+    });
+  };
+
+  updateCustomer = () => {
+    let customer = {
+      customerName: this.state.editCustomerName,
+      customerCar: this.state.editCustomerCar,
+      plateNumber: this.state.editCustomerPlate,
+      userId: this.state.editCustomer.user_id,
+    };
+    axios.put(`/api/updatecustomer`, customer).then(e => {
+      this.getAllCustomers();
+      this.setState({
+        editOpen: false,
+        editCustomer: {},
+        editCustomerName: '',
+        editCustomerCar: '',
+        editCustomerPlate: '',
+      });
+    });
+  };
+
   render() {
     const { classes } = this.props;
     const mappedState = this.state.allCustomers.map((customer, id) => {
@@ -124,9 +186,15 @@ class AllCustomers extends Component {
             {customer.plate_number}
           </TableCell>
           <TableCell align="center" className={classes.tableCell}>
-            <Button onClick={() => this.deleteCustomer(customer)}>
-              Delete
-            </Button>
+            {this.state.editing ? (
+              <Button onClick={() => this.handleEditOpen(customer)}>
+                Edit
+              </Button>
+            ) : (
+              <Button onClick={() => this.deleteCustomer(customer)}>
+                Delete
+              </Button>
+            )}
           </TableCell>
         </TableRow>
       );
@@ -135,7 +203,43 @@ class AllCustomers extends Component {
       <div className={classes.root}>
         <NavBar history={this.props.history} />
         <div className={classes.view}>
+          <div className={classes.wrapper}>
+            <Typography>Edit Customer</Typography>
+            <Switch
+              checked={this.state.editing}
+              onChange={this.handleEditChange}
+            />
+          </div>
           <Paper className={classes.paper}>
+            <Dialog open={this.state.editOpen} onClose={this.handleClose}>
+              <DialogTitle>Edit Customer</DialogTitle>
+              <DialogContent>
+                <DialogContentText>Customer Name</DialogContentText>
+                <TextField
+                  defaultValue={this.state.editCustomer.real_name}
+                  onChange={e =>
+                    this.handleInputUpdate('editCustomerName', e.target.value)
+                  }
+                />
+                <DialogContentText>Car Model</DialogContentText>
+                <TextField
+                  defaultValue={this.state.editCustomer.car_make}
+                  onChange={e =>
+                    this.handleInputUpdate('editCustomerCar', e.target.value)
+                  }
+                />
+                <DialogContentText>Plate Number</DialogContentText>
+                <TextField
+                  defaultValue={this.state.editCustomer.plate_number}
+                  onChange={e =>
+                    this.handleInputUpdate('editCustomerPlate', e.target.value)
+                  }
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={this.updateCustomer}>Submit</Button>
+              </DialogActions>
+            </Dialog>
             <Grid item xs={12}>
               <Table className={classes.table}>
                 <TableHead>
@@ -143,13 +247,13 @@ class AllCustomers extends Component {
                     <TableCell className={classes.tableCell}>
                       Customer Name
                     </TableCell>
-                    <TableCell align="center" className={classes.tableCell}>
-                      Car Model
-                    </TableCell>
                     <TableCell
                       align="center"
                       className={classes.notShownInMobile}
                     >
+                      Car Model
+                    </TableCell>
+                    <TableCell align="center" className={classes.tableCell}>
                       License Plate
                     </TableCell>
                     <TableCell align="center" className={classes.tableCell}>

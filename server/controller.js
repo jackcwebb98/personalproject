@@ -113,4 +113,11 @@ module.exports = {
     let foundCustomer = await db.imageCheck(imageText, companyId);
     res.status(200).send(foundCustomer);
   },
+  updateCustomer: async (req, res) => {
+    const db = req.app.get('db');
+    const { customerName, customerCar, plateNumber, userId } = req.body;
+
+    await db.updateCustomer(customerCar, customerName, plateNumber, userId);
+    res.sendStatus(200);
+  },
 };
