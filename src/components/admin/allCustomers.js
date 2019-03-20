@@ -204,7 +204,7 @@ class AllCustomers extends Component {
         <NavBar history={this.props.history} />
         <div className={classes.view}>
           <div className={classes.wrapper}>
-            <Typography>Edit Customer</Typography>
+            <Typography>Edit Customer Mode</Typography>
             <Switch
               checked={this.state.editing}
               onChange={this.handleEditChange}
