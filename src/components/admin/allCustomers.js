@@ -208,6 +208,7 @@ class AllCustomers extends Component {
             <Switch
               checked={this.state.editing}
               onChange={this.handleEditChange}
+              color="secondary"
             />
           </div>
           <Paper className={classes.paper}>
