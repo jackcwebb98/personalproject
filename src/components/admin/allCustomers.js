@@ -55,6 +55,10 @@ const styles = theme => ({
     display: 'flex',
     alignItems: 'center',
   },
+  actions: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
 });
 
 class AllCustomers extends Component {
@@ -204,7 +208,9 @@ class AllCustomers extends Component {
         <NavBar history={this.props.history} />
         <div className={classes.view}>
           <div className={classes.wrapper}>
-            <Typography>Edit Customer Mode</Typography>
+            <Typography className={classes.actions}>
+              Edit Customer Mode
+            </Typography>
             <Switch
               checked={this.state.editing}
               onChange={this.handleEditChange}
@@ -237,7 +243,7 @@ class AllCustomers extends Component {
                   }
                 />
               </DialogContent>
-              <DialogActions>
+              <DialogActions className={classes.actions}>
                 <Button onClick={this.updateCustomer}>Submit</Button>
               </DialogActions>
             </Dialog>

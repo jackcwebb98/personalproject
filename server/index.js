@@ -9,9 +9,14 @@ const pgSession = require('connect-pg-simple')(session);
 
 const app = express();
 const { SERVER_PORT, CONNECTION_STRING, SESSION_SECRET } = process.env;
+const path = require('path'); // Usually moved to the start of file
 
 const pgPool = new pg.Pool({
   connectionString: CONNECTION_STRING,
+});
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../build/index.html'));
 });
 
 app.use(express.json());
@@ -42,9 +47,9 @@ app.post(`/customer/new`, ctrl.createCustomer);
 app.post(`/api/customers`, ctrl.getAllCustomers);
 app.post(`/delete/customer`, ctrl.deleteCustomer);
 app.post(`/api/platecheck`, ctrl.plateCheck);
-app.post(`/api/imagecheck`, ctrl.imageCheck)
+app.post(`/api/imagecheck`, ctrl.imageCheck);
 
-app.put(`/api/updatecustomer`, ctrl.updateCustomer)
+app.put(`/api/updatecustomer`, ctrl.updateCustomer);
 
 app.get(`/api/current`, ctrl.getUser);
 app.get(`/api/companies`, ctrl.getAllCompanies);

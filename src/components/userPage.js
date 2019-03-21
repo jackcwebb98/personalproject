@@ -23,6 +23,7 @@ const styles = theme => ({
     flexDirection: 'column',
     justifyContent: 'space-evenly',
     alignItems: 'center',
+    
   },
   textFields: {
     display: 'flex',

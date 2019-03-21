@@ -25,6 +25,7 @@ const styles = theme => ({
     flexDirection: 'column',
     height: '60%',
     width: '50%',
+    
   },
 });
 
